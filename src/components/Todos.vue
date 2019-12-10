@@ -4,14 +4,20 @@
     <div class="legend">
       <span>Double click to mark as complete</span>
       <span>
-        <span class="incomplete-box">=Incomplete</span>
+        <span class="incomplete-box"></span>=Incomplete
       </span>
       <span>
-        <span class="complete-box">=Complete</span>
+        <span class="complete-box"></span>=Complete
       </span>
     </div>
     <div class="todos">
-      <div class="todo" v-for="todo in todos" v-bind:key="todo.id">{{todo.title}}
+      <div 
+      class="todo" 
+      v-for="todo in todos" 
+      v-bind:key="todo.id"
+      @dblclick="switchCompleted(todo)" 
+      v-bind:class="{'is-complete':todo.completed}">
+      {{todo.title}}
       <i @click="deleteTodo(todo.id)" class="iconfont icon-delete"></i>
       </div>
     </div> 
@@ -27,7 +33,17 @@ export default {
     todos:"giveState"
   }),
   methods:{
-    ...mapActions(['getAllTodos',"deleteTodo"]),
+    ...mapActions(['getAllTodos',"deleteTodo","updateTodo"]),
+    switchCompleted(todo){
+      window.console.log(todo.completed);
+      const updTodo={
+        id:todo.id,
+        title:todo.title,
+        completed:!todo.completed
+      };
+      window.console.log(updTodo.completed);
+      this.updateTodo(updTodo);
+    }
   },
   created() {
     this.getAllTodos();
@@ -62,9 +78,10 @@ export default {
   }
   i{
     position: absolute;
-    bottom: 10px;
-    right: 10px;
-    color: #fff;
+    /* bottom: 10px; */
+    vertical-align: middle;
+    right: 5px;
+    color: purple;
     cursor: pointer;
   }
   .legend{
@@ -76,13 +93,17 @@ export default {
     display: inline-block;
     width: 10px;
     height: 10px;
-    background-color: #41b883;
+    background-color: #35495e;
   }
   .incomplete-box{
    display: inline-block;
    width: 10px;
    height: 10px;
    background-color: #41b883; 
+  }
+  .is-complete{
+    background-color: #35495e;
+    color: #fff;
   }
   @media (max-width: 500px){
     .todos{
